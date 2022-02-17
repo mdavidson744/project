@@ -1,0 +1,160 @@
+ <!--Import Google Icon Font-->
+ <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+ <!-- Compiled and minified CSS -->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+<div class="container" style="margin-top: 70px;">
+    <div class="row card-group">
+        <div class="col-sm-12 white">
+            <div *ngFor = "let carListings of car_list | async">
+                <div class="card white" style = "width: 50rem; margin: auto">
+                    <div class="card-title">
+                         {{carListings.year}} {{ carListings.make }} {{carListings.model }}
+                    </div>
+                    <div class="card-body" style="padding-left: 25px;">
+                        <div class="row">Gearbox: {{ carListings.gearbox }}</div>
+                        <div class="row">Engine Capacity: {{ carListings.engineCapacity }}</div>
+                        <div class="row">Engine Type: {{ carListings.engineType }}</div>
+                        <div class="row">Number of seats: {{ carListings.numberSeats }}</div>
+                        <div class="row">Number of doors: {{ carListings.numberDoors }}</div>
+                        <div class="row">Colour: {{ carListings.colour }}</div>
+                        <div class="row">Reg number: {{ carListings.regNumber }}</div>
+                        <div class="row">Description: {{ carListings.description }}</div>
+                    </div>
+                    <div class="card-action grey lighten-3">
+                        <h4>£{{ carListings.price }}</h4>
+                        <a (click)="toggleTag()" class="btn-floating grey darken-2">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        <a (click)="toggleTag()" class="btn-floating grey darken-2" (click)="deleteCarListing(carListings._id)" [routerLink]="['/carListings']" style="float: right;">
+                            <i class="material-icons">delete</i>
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div> <!-- col -->
+    </div> <!-- row -->
+    <div class="row card-group">
+        <div class="col-sm-6 col-md-4 col-lg-3" *ngFor = "let photo of photos | async ">
+            <div class="card bg-light mb-3"  style = "margin: auto; cursor: pointer">
+                <div class="card-body">
+                    <img src = "{{photo.filepath}}" style="max-width: 100%">
+                </div>
+                <div class="card-action grey lighten-3" *ngFor = "let carListing of car_list | async">
+                    <a class="btn-floating grey darken-2" (click)="deletePhoto(carListing._id, photo._id)" [routerLink]="['/carListing']" style="float: right;">
+                        <i class="material-icons">delete</i>
+                    </a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div *ngFor = "let carListing of car_list | async ">
+        <div class="col">
+            <a (click)="toggleTagP()" class="btn-floating blue pulse">
+                <i class="material-icons">add</i>
+            </a>
+        </div>
+
+        <div class="col" *ngIf="showMeP">
+            <input type="file" (change)="onFileSelected($event)">
+            <button type="button" (click)="onUpload(carListing._id)">Upload</button>
+        </div>
+        
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div *ngFor = "let carListings of car_list | async">
+                <form [formGroup]="carEditForm" (ngSubmit)="onEditSubmit()" *ngIf="showMe">
+                    <h2>Edit a car</h2>
+                    <div class="form-group">
+                        <label for="make">Make</label>
+                        <input type="text" id="make" *ngFor = "let carListings of car_list | async" value=carListings.make name="make" class="form-control" formControlName="make">
+                    </div>
+                    <div class="form-group">
+                        <label for="model">Model</label>
+                        <input type="text" id="model" name="model" class="form-control" formControlName="model">
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="text" id="year" name="year" class="form-control" formControlName="year">
+                    </div>
+                    <div class="form-group">
+                        <label for="gearbox">Gearbox</label>
+                        <input type="text" id="gearbox" class="form-control" formControlName="gearbox">
+                    </div>
+                    <div class="form-group">
+                        <label for="engineCapacity">Engine Capacity</label>
+                        <input type="text" id="engineCapacity" name="engineCapacity" class="form-control" formControlName="engineCapacity">
+                    </div>
+                    <div class="form-group">
+                        <label for="engineType">Engine Type</label>
+                        <input type="text" id="engineType" name="engineType" class="form-control" formControlName="engineType">
+                    </div>
+                    <div class="form-group">
+                        <label for="numberSeats">Number of Seats</label>
+                        <input type="text" id="numberSeats" name="numberSeats" class="form-control" formControlName="numberSeats">
+                    </div>
+                    <div class="form-group">
+                        <label for="numberDoors">Number of Doors</label>
+                        <input type="text" id="numberDoors" name="numberDoors" class="form-control" formControlName="numberDoors">
+                    </div>
+                    <div class="form-group">
+                        <label for="colour">Colour</label>
+                        <input type="text" id="colour" name="colour" class="form-control" formControlName="colour">
+                    </div>
+                    <div class="form-group">
+                        <label for="regNumber">Reg Number</label>
+                        <input type="text" id="regNumber" name="regNumber" class="form-control" formControlName="regNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="Price">Price £</label>
+                        <input type="text" id="Price" name="Price" class="form-control" formControlName="price">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" rows="3" class="form-control" formControlName="description"></textarea>
+                    </div>
+                    <button class="btn.btn-primary" type="submit" (click)="editCarListing(carListings._id)">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="container">
+    <div class="row">
+        <div class="col-sm-12" *ngFor = "let carListings of car_list | async">
+            <h4>Add a photo</h4> <a (click)="toggleTagP()" class="btn-floating blue pulse">
+                <i class="material-icons">add</i>
+            </a>
+            <form [formGroup]="photoForm" *ngIf="showMeP">
+                    <input type="file" class="file-upload" id="filesW" name="filesW">
+                <button class="btn btn-danger btn-block btn-lg" type="submit" (click)="onPhotoSubmit(carListings._id)" [routerLink] = "['/CarListings']">Upload</button>
+            </form>
+            </div>
+        </div>
+    </div> -->
+
+<!-- <div class="container">
+    <div class="row">
+        <div class="col-sm-12" style="text-align: center;">
+            <form [ formGroup ]="form" (ngSubmit)="submitForm()">
+                <div class="form-group">
+                    <input type="file" (change)="uploadFile($event)">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-danger btn-block btn-lg">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> -->
