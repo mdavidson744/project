@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
 import { WebService } from './web.service';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
 import { ToastrService } from 'ngx-toastr';
 import { FilterPipe } from './filter.pipe';
 import { FormsModule } from '@angular/forms';
+import {HttpHeaders} from "@angular/common/http";
 
 @Component({
     selector: 'carListings',
@@ -37,7 +37,7 @@ export class CarListingsComponent {
     constructor(public webService: WebService,
                         private formBuilder: FormBuilder,
                         private route: ActivatedRoute, 
-                        public authService: AuthService,
+
                         private router: Router,
                         private toastr: ToastrService) {}
 
@@ -92,9 +92,16 @@ export class CarListingsComponent {
         this.page = this.page + 1;
         this.car_list = this.webService.getCarListings(this.page);
     }
+    pushedHeader() {
+        return {
+            
+            headers: new HttpHeaders({'x-access-token': sessionStorage['x-access-token'],
+                                        'username': sessionStorage['username']})
+        }
+      }
 
     onSubmit() {
-        this.webService.postCarListing(this.carForm.value)
+        this.webService.postCarListing(this.carForm.value, this.pushedHeader())
             .subscribe((response: any) =>{
                 this.carForm.reset();
                 this.toastr.success("You have added a listing")

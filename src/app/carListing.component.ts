@@ -2,13 +2,12 @@ import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { WebService } from './web.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '@auth0/auth0-angular';
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { toBase64String } from '@angular/compiler/src/output/source_map';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
-
+import {HttpHeaders} from "@angular/common/http";
 
 
 
@@ -71,7 +70,7 @@ export class CarListingComponent {
 
     onEditSubmit() {
         console.log('test')
-        this.webService.edCarListing(this.carEditForm.value)
+        this.webService.edCarListing(this.carEditForm.value, this.pushedHeader())
             .subscribe((response: any) =>{
                 this.carEditForm.reset();
                 this.car_list = this.webService.getCarListing(this.route.snapshot.params['id']);
@@ -103,7 +102,7 @@ export class CarListingComponent {
     id = this.webService.getCarListing(this.route.snapshot.params['id'])
 
     deleteCarListing(carListingId: any){
-        this.webService.delCarListing(carListingId).subscribe((response: any) => {
+        this.webService.delCarListing(carListingId, this.pushedHeader()).subscribe((response: any) => {
             this.toastr.success("You have deleted a listing")
             this.router.navigateByUrl('/CarListings');
             
@@ -111,14 +110,14 @@ export class CarListingComponent {
     }
 
     editCarListing(carListingId: any) {
-        this.webService.edCarListing(carListingId).subscribe((response: any) => {
+        this.webService.edCarListing(carListingId, this.pushedHeader()).subscribe((response: any) => {
             this.toastr.success("You have edited a listing")
             this.router.navigateByUrl('/CarListings/' + carListingId);
         })
     }
 
     deletePhoto(carListingId: any, photoid: any) {
-        this.webService.delPhoto(carListingId, photoid).subscribe((response: any) => {
+        this.webService.delPhoto(carListingId, photoid, this.pushedHeader()).subscribe((response: any) => {
             this.toastr.success("Photo deleted")
             this.photos = this.webService.getPhotos(this.route.snapshot.params['id']);
         })
@@ -136,10 +135,10 @@ export class CarListingComponent {
         this.filesW = <File>event.target.files[0]
     }
 
-    onUpload(carListingId: any){
+    onUpload(carListingId: any, {headers: httpHeaders}){
         const fd = new FormData();
         fd.append('filesW', this.filesW, this.filesW.name)
-        this.http.post('http://localhost:5000/api/v1.0/carListings/' + carListingId + '/photos', fd).subscribe(
+        this.http.post('http://localhost:5000/api/v1.0/carListings/' + carListingId + '/photos', fd, this.pushedHeader()).subscribe(
             res => {
                 console.log(res)
                 this.toastr.success("Photo added")
@@ -148,20 +147,13 @@ export class CarListingComponent {
         )
     }
 
-    // onPhotoSubmit(carListingId:any){
-    //     this.webService.postPhoto(this.photoForm.File).subscribe((response: any) =>{
-    //         this.photoForm.reset();
-    //         this.toastr.success("You have added a photo")
-    //         console.log("pass")
-    //         // return this.router.navigate(['/CarListings', carListingId])
-    //     });
-    // this.photoForm.reset();
-    // }
-
-    // onPhotoSubmit(carListingId, file: File)
-    // {
-    //     this.http.post('http://localhost:5000/api/v1.0/carListings/' + this.carListingId + '/photos', postData)
-    // }
+    pushedHeader() {
+        return {
+            
+            headers: new HttpHeaders({'x-access-token': sessionStorage['x-access-token'],
+                                        'username': sessionStorage['username']})
+        }
+      }
 
 
     car_list: any = [];

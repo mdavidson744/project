@@ -21,6 +21,8 @@
                         <div class="row">Colour: {{ carListings.colour }}</div>
                         <div class="row">Reg number: {{ carListings.regNumber }}</div>
                         <div class="row">Description: {{ carListings.description }}</div>
+                        <div class="row">Posted by: {{ carListings.user}}</div>
+                        <div class="row">Contact details: </div>
                     </div>
                     <div class="card-action grey lighten-3">
                         <h4>£{{ carListings.price }}</h4>
@@ -62,7 +64,7 @@
 
         <div class="col" *ngIf="showMeP">
             <input type="file" (change)="onFileSelected($event)">
-            <button type="button" (click)="onUpload(carListing._id)">Upload</button>
+            <button type="button" (click)="onUpload(carListing._id, this.pushedHeader())">Upload</button>
         </div>
         
     </div>

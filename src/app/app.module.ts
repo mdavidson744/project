@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppComponent } from './app.component';
 import { CarListingsComponent } from './carListings.component';
 import { CarListingComponent } from './carListing.component';
@@ -9,18 +8,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AuthModule } from '@auth0/auth0-angular';
 import { NavComponent } from './nav.component';
 import { FootComponent } from './foot.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from './filter.pipe'
+import { LoginComponent } from './login.component';
+import { RegisterComponent } from './register.component';
 
 
 var routes: any = [
   {
-    path: 'home',
+    path: '',
     component: HomeComponent
   },
   {
@@ -30,13 +30,21 @@ var routes: any = [
   {
     path: 'CarListings/:id',
     component: CarListingComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'register',
+    component: RegisterComponent
   }
 ];
 
 
 @NgModule({
   declarations: [
-    AppComponent, CarListingsComponent, HomeComponent, CarListingComponent, NavComponent, FootComponent, FilterPipe
+    AppComponent, CarListingsComponent, HomeComponent, CarListingComponent, NavComponent, FootComponent, FilterPipe, LoginComponent, RegisterComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
@@ -44,12 +52,7 @@ var routes: any = [
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     ReactiveFormsModule,
-    FormsModule,
-    AuthModule.forRoot({
-      domain: 'dev-nl4j4ua7.us.auth0.com',
-      clientId: 'aKYBf9jUc3NHQdEjtfjCScxIbQTJryLG'
-    }),
-    
+    FormsModule    
   ],
   providers: [WebService],
   bootstrap: [AppComponent],

@@ -39,7 +39,6 @@ def allowed_file(filename):
 # ----- end media upload -----
 
 
-
 def jwt_required(func):
     @wraps(func)
     def jwt_required_wrapper(*args, **kwargs):
@@ -80,7 +79,6 @@ def index():
 @app.route("/api/v1.0/carListings", methods=["POST"])
 @jwt_required
 def add_car_listing():
-    
         new_car_listing = {
             "make": request.form["make"],
             "model": request.form["model"],
@@ -97,7 +95,7 @@ def add_car_listing():
             "photos": [],
             # will gave MOT taking the registration data
             # "user": request.headers[""]
-            "user": session['username']
+            "user": request.headers['username']
         }
         new_car_listing_id = carListings.insert_one(new_car_listing) # insertion
         new_car_listing_link = "http://localhost:5000/api/v1.0/carListings/" + str(new_car_listing_id.inserted_id)
@@ -147,6 +145,10 @@ def show_one_car_listing(id):
 @app.route("/api/v1.0/carListings/<string:id>", methods=["PUT"])
 @jwt_required
 def edit_car_listing(id):
+    resultFind = carListings.find_one({"_id": ObjectId(id)})
+    if resultFind['user'] != request.headers['username']:
+        return make_response({'error': 'must be logged in as the same user that made the listing'}, 401)
+    else:
         result = carListings.update_one( \
         { "_id": ObjectId(id)}, {
             "$set": {
@@ -163,7 +165,7 @@ def edit_car_listing(id):
                 "regNumber": request.form["regNumber"],
                 "price": request.form["price"],
                 # will gave MOT taking the registration data
-                "user": session['username']
+                "user": request.headers['username']
             }
         })
         if result.matched_count == 1: #if true
@@ -180,7 +182,7 @@ def edit_car_listing(id):
 @jwt_required
 def delete_car_listing(id):
     resultFind = carListings.find_one({"_id": ObjectId(id)})
-    if resultFind['user'] != session['username']:
+    if resultFind['user'] != request.headers['username']:
         return make_response({'error': 'must be logged in as the same user that made the listing'})
     else:
         result = carListings.delete_one( { "_id" : ObjectId(id) } )
@@ -196,7 +198,7 @@ def delete_car_listing(id):
 def add_new_photo(id):
     
     resultFind = carListings.find_one({"_id": ObjectId(id)})
-    if resultFind['user'] != session['username']:
+    if resultFind['user'] != request.headers['username']:
         return make_response({'error': 'must be logged in as the same user that made the listing'})
     else:
         files = request.files.getlist('filesW')
@@ -259,19 +261,8 @@ def fetch_all_photos(id):
 def delete_photo(cid, pid):
     
     resultFind = carListings.find_one({"_id": ObjectId(cid)})
-    if resultFind['user'] != session['username']:
+    if resultFind['user'] != request.headers['username']:
         return make_response({'error': 'must be logged in as the same user that made the listing'})
-    
-    # path=''
-    
-    
-    # photo = carListings.find(
-    #     { "photos._id" : ObjectId(pid) }, #ccheck for review id
-    #     { "_id" : 0, "photos.$": 1 },
-    #     { "filepath": str(path)},
-        
-    # ) 
-        
         
     else:
         carListings.update_one(
@@ -279,9 +270,6 @@ def delete_photo(cid, pid):
             {"$pull": {"photos":
                 {"_id": ObjectId(pid)}}}
             )
-    
-    # pathF = 'src/' + str(path)
-    # os.remove("src/" + str(photo["filepath"]))
         return make_response(jsonify({}), 204)
         
  
@@ -298,7 +286,7 @@ def login():
                     'admin': user["admin"],
                     'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
                     }, app.config['SECRET_KEY'])
-                return make_response( jsonify({ 'token': token, 'session username': session['username']}), 200)
+                return make_response( jsonify({ 'token': token, 'username': session['username']}), 200)
             else:
                 return make_response( jsonify( {'message': 'Bad password'}), 401)
         else:

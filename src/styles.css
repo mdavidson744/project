@@ -2,8 +2,8 @@
 @import '~ngx-toastr/toastr';
 
 footer {
-    display: flex;
-    align-items: flex-end;
+    position: absolute;
+    bottom: 0;
 }
 .form-group {
     padding-top: 5px;
