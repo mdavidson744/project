@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from this import d
 from flask import Flask, json, request, jsonify, make_response, session
 from pymongo import MongoClient
@@ -182,14 +183,17 @@ def edit_car_listing(id):
 @jwt_required
 def delete_car_listing(id):
     resultFind = carListings.find_one({"_id": ObjectId(id)})
-    if resultFind['user'] != request.headers['username']:
-        return make_response({'error': 'must be logged in as the same user that made the listing'})
-    else:
+    if resultFind['user'] == request.headers['username'] or request.headers["username"] == 'admin':
         result = carListings.delete_one( { "_id" : ObjectId(id) } )
         if result.deleted_count == 1:
             return make_response(jsonify( {} ), 204)
         else:
             return make_response(jsonify( { "error": "Invalid car ID"} ), 404) # catch
+    else:
+        
+        return make_response({'error': 'must be logged in as the same user that made the listing'}, 401)
+        
+    
 
 #add photos
 @cross_origin
@@ -198,9 +202,7 @@ def delete_car_listing(id):
 def add_new_photo(id):
     
     resultFind = carListings.find_one({"_id": ObjectId(id)})
-    if resultFind['user'] != request.headers['username']:
-        return make_response({'error': 'must be logged in as the same user that made the listing'})
-    else:
+    if resultFind['user'] == request.headers['username'] or request.headers["username"] == 'admin':
         files = request.files.getlist('filesW')
         errors = {}
         success = False
@@ -235,7 +237,8 @@ def add_new_photo(id):
             resp = jsonify(errors)
             resp.status_code = 500
             return resp
-
+    else:
+        return make_response({'error': 'must be logged in as the same user that made the listing'})
 #PHOTOS 
 #get all
 @app.route("/api/v1.0/carListings/<string:id>/photos", methods=["GET"])
@@ -262,7 +265,7 @@ def delete_photo(cid, pid):
     
     resultFind = carListings.find_one({"_id": ObjectId(cid)})
     if resultFind['user'] != request.headers['username']:
-        return make_response({'error': 'must be logged in as the same user that made the listing'})
+        return make_response({'error': 'must be logged in as the same user that made the listing'}, 401)
         
     else:
         carListings.update_one(
@@ -304,22 +307,32 @@ def logout():
 @app.route("/api/v1.0/users", methods=["POST"])
 def add_user():
     #check
+    usernameT = None
     if "username" in request.form and "password" in request.form:
-        password = bytes(request.form["password"], 'utf-8') #needed for 'Unicode objects must be encoded before hashing'
-        new_user = {
-            "username": request.form["username"],
-            "password": password,
-            "admin": False
-        }
-        new_user["password"] = bcrypt.hashpw(new_user["password"], bcrypt.gensalt())
-        new_user_id = users.insert_one(new_user)
-        #response
-        new_user_link = "http://localhost:5000/api/v1.0/users/" + str(new_user_id.inserted_id)
-        return make_response(jsonify({"url": new_user_link}), 201) #only for postman testing. get rid of url and replace with 'message': 'user created successfully' when released
-        
+        if request.form["username"] != "" and request.form["password"] != "" and request.form["username"] != NULL and request.form["password"] != NULL:
+            usernameT = request.form["username"]
+            user = users.find_one( { "username": usernameT})
+            if user is None:
+                password = bytes(request.form["password"], 'utf-8') #needed for 'Unicode objects must be encoded before hashing'
+                new_user = {
+                    "username": request.form["username"],
+                    "password": password,
+                    "admin": False
+                }
+                new_user["password"] = bcrypt.hashpw(new_user["password"], bcrypt.gensalt())
+                new_user_id = users.insert_one(new_user)
+                #response
+                new_user_link = "http://localhost:5000/api/v1.0/users/" + str(new_user_id.inserted_id)
+                return make_response(jsonify({"url": new_user_link}), 201) #only for postman testing. get rid of url and replace with 'message': 'user created successfully' when released
+            else:
+                return make_response(jsonify({"message": "user already exists. Please log in to this account on the login page or choose another username"}), 400)       
+        else:
+            return make_response(jsonify({"message": "Cannot have null data or an empty form"}), 400) 
+    
     else:
-        #catch
-        return make_response(jsonify({"message": 'Please ensure you have entered values for both username and password'}), 404)
+            #catch
+            return make_response(jsonify({"message": 'Wrong form data'}), 400)
+    
     
 
 

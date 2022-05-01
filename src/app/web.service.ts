@@ -34,12 +34,21 @@ export class WebService {
         return this.http.get('http://localhost:5000/api/v1.0/carListings/' + id);
          //setting http headers here
     }
+    
     delCarListing(carListingId: any, { headers: httpHeaders}) {
-        return this.http.delete('http://localhost:5000/api/v1.0/carListings/' + carListingId, { headers: httpHeaders});
+        return this.http.delete('http://localhost:5000/api/v1.0/carListings/' + carListingId, { headers: httpHeaders}).pipe(catchError(this.errorHandler)).subscribe(res => {
+            console.log(res)
+            this.toastr.success('Delete successful')
+            this.router.navigate(['/CarListings'])
+        }, (error) => {this.toastr.error('Listing Delete unsuccessful. Only the user who posted the advert can delete the listing')});
     }
 
     delPhoto(carListingId: any, photoId: any, { headers: httpHeaders}) {
-        return this.http.delete('http://localhost:5000/api/v1.0/carListings/' + carListingId + '/photos/' + photoId, { headers: httpHeaders});
+        return this.http.delete('http://localhost:5000/api/v1.0/carListings/' + carListingId + '/photos/' + photoId, { headers: httpHeaders}).pipe(catchError(this.errorHandler)).subscribe(res => {
+            console.log(res)
+            this.toastr.success('Delete successful')
+            this.router.navigate(['/CarListings'])
+        }, (error) => {this.toastr.error('Photo Delete unsuccessful. Only the user who posted the advert can delete the listing')});;
     }
     
     getPhotos(id: string) {
@@ -87,18 +96,12 @@ export class WebService {
         putData.append("regNumber", car.regNumber);
         putData.append("price", car.price);
         
-        return this.http.put('http://localhost:5000/api/v1.0/carListings/' + this.carListingId, putData, {headers: httpHeaders});
+        return this.http.put('http://localhost:5000/api/v1.0/carListings/' + this.carListingId, putData, {headers: httpHeaders}).pipe(catchError(this.errorHandler)).subscribe(res => {
+            console.log(res)
+            this.toastr.success('Edit successful')
+            this.router.navigate(['/CarListings'])
+        }, (error) => {this.toastr.error('Edit unsuccessful. Only the user who posted the advert can delete the listing')});
     }
-
-    // deleteReview(id: string){
-    //     return this.http.delete('http://localhost:5000/api/v2.0/movies/' + this.movieID + '/reviews' + id);
-    // }
-
-    // postPhoto(filesW: File){
-
-    //     return this.http.post('http://localhost:5000/api/v1.0/carListings/' + this.carListingId + '/photos', file);
-    // }
-
 
     async getLogin( { headers: httpHeaders }) {
         this.http.get('http://localhost:5000/api/v1.0/login', {headers: httpHeaders}).pipe(catchError(this.errorHandler)).subscribe(res => {
@@ -157,9 +160,11 @@ export class WebService {
         postUserData.append("username", user.username);
         postUserData.append("password", user.password);
 
-        return this.http.post('http://localhost:5000/api/v1.0/users', postUserData);
-        this.router.navigate(['/Login'])
-
+        this.http.post('http://localhost:5000/api/v1.0/users', postUserData).pipe(catchError(this.errorHandler)).subscribe(res => {
+            console.log(res)
+            this.toastr.success('Register successful')
+            this.router.navigate(['/login'])
+        }, (error) => {this.toastr.error('Register unsuccessful. User currently exists or form is incomplete')});
     }
 
 }

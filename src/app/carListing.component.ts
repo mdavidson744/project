@@ -71,12 +71,6 @@ export class CarListingComponent {
     onEditSubmit() {
         console.log('test')
         this.webService.edCarListing(this.carEditForm.value, this.pushedHeader())
-            .subscribe((response: any) =>{
-                this.carEditForm.reset();
-                this.car_list = this.webService.getCarListing(this.route.snapshot.params['id']);
-                this.photos = this.webService.getPhotos(this.route.snapshot.params['id'])
-            });
-        this.carEditForm.reset();
     }
 
     toggleTag(){
@@ -102,25 +96,15 @@ export class CarListingComponent {
     id = this.webService.getCarListing(this.route.snapshot.params['id'])
 
     deleteCarListing(carListingId: any){
-        this.webService.delCarListing(carListingId, this.pushedHeader()).subscribe((response: any) => {
-            this.toastr.success("You have deleted a listing")
-            this.router.navigateByUrl('/CarListings');
-            
-        })
+        this.webService.delCarListing(carListingId, this.pushedHeader())
     }
 
     editCarListing(carListingId: any) {
-        this.webService.edCarListing(carListingId, this.pushedHeader()).subscribe((response: any) => {
-            this.toastr.success("You have edited a listing")
-            this.router.navigateByUrl('/CarListings/' + carListingId);
-        })
+        this.webService.edCarListing(carListingId, this.pushedHeader())
     }
 
     deletePhoto(carListingId: any, photoid: any) {
-        this.webService.delPhoto(carListingId, photoid, this.pushedHeader()).subscribe((response: any) => {
-            this.toastr.success("Photo deleted")
-            this.photos = this.webService.getPhotos(this.route.snapshot.params['id']);
-        })
+        this.webService.delPhoto(carListingId, photoid, this.pushedHeader())
     }
 
     //add photo

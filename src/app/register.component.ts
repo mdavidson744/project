@@ -32,13 +32,10 @@ export class RegisterComponent {
     }
 
     onSubmit() {
-        this.webService.postUser(this.registerForm.value)
-            .subscribe((response: any) =>{
-                this.registerForm.reset();
-                this.toastr.success("You have successfully registered. You have been redirected to the login page...")
-                return this.router.navigate(['/login'])
-            });
-        this.registerForm.reset();
+        this.webService.postUser(this.registerForm.value);
+        // this.registerForm.reset();
+        // this.toastr.success("You have successfully registered. You have been redirected to the login page...")
+        // return this.router.navigate(['/login'])
     }
 
 }
