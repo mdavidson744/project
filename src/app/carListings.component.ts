@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { WebService } from './web.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FilterPipe } from './filter.pipe';
@@ -45,33 +45,44 @@ export class CarListingsComponent {
         this.car_list = this.webService.getCarListings(this.page);
         this.photos = this.webService.getPhotos(this.route.snapshot.params['id']);
         this.carForm = this.formBuilder.group({
-            make: '',
-            model: '',
-            year: '',
-            gearbox: '',
-            engineCapacity: '',
-            engineType: '',
-            numberSeats: '',
-            numberDoors: '',
-            colour: '',
-            description: '',
-            regNumber: '',
-            price: ''
+            make: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+            model: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+            year: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            gearbox: new FormControl('', [Validators.required]),
+            engineCapacity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            engineType: new FormControl('', [Validators.required]),
+            numberSeats: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            numberDoors: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            colour: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+            description: '', //optional so no validators.
+            regNumber: new FormControl('', [Validators.required]),
+            price: new FormControl('',[Validators.required, Validators.pattern(/^[0-9]\d*$/)])
         })
     }
+    get make(){return this.carForm.get('make')}
+    get model(){return this.carForm.get('model')}
+    get year(){return this.carForm.get('year')}
+    get gearbox(){return this.carForm.get('gearbox')}
+    get engineCapacity(){return this.carForm.get('engineCapacity')}
+    get engineType(){return this.carForm.get('engineType')}
+    get numberSeats(){return this.carForm.get('numberSeats')}
+    get numberDoors(){return this.carForm.get('numberDoors')}
+    get colour(){return this.carForm.get('colour')}
+    get regNumber(){return this.carForm.get('regNumber')}
+    get price(){return this.carForm.get('price')}
+    
+    
+    
 
     toggleTag(){
         this.showMe=!this.showMe
     }
-
     sponsoredAds(){
         this.showMeTA=!this.showMeTA
     }
-
     recommendedAds(){
         this.showMeRA=!this.showMeRA
     }
-
     similarAds(){
         this.showMeCF=!this.showMeCF
     }
@@ -102,11 +113,6 @@ export class CarListingsComponent {
 
     onSubmit() {
         this.webService.postCarListing(this.carForm.value, this.pushedHeader())
-            .subscribe((response: any) =>{
-                this.carForm.reset();
-                this.toastr.success("You have added a listing")
-                return this.router.navigate(['/CarListings', response.id])
-            });
         this.carForm.reset();
     }
 

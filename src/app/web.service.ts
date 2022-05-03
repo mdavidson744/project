@@ -76,10 +76,12 @@ export class WebService {
         this.headers = this.headers.append('username', sessionStorage['username']);
         console.log(this.headers)
         
-        return this.http.post('http://localhost:5000/api/v1.0/carListings', postData, {headers: httpHeaders});
+        return this.http.post('http://localhost:5000/api/v1.0/carListings', postData, {headers: httpHeaders}).pipe(catchError(this.errorHandler)).subscribe((response: any) => {
+            console.log(response)
+            this.toastr.success('Listing successfully added')
+            return this.router.navigate(['/CarListings', response.id])
+        }, (error) => {this.toastr.error('Adding listing was unsuccessful. You must be logged in')});
     }
-
-    // postPhoto()
 
     edCarListing(car: any, {headers: httpHeaders}) {
         let putData = new FormData();

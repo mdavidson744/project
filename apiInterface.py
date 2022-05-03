@@ -323,7 +323,7 @@ def add_user():
                 new_user_id = users.insert_one(new_user)
                 #response
                 new_user_link = "http://localhost:5000/api/v1.0/users/" + str(new_user_id.inserted_id)
-                return make_response(jsonify({"url": new_user_link}), 201) #only for postman testing. get rid of url and replace with 'message': 'user created successfully' when released
+                return make_response(jsonify({"url": new_user_link, "username": request.form["username"]}), 201) #only for postman testing. get rid of url and replace with 'message': 'user created successfully' when released
             else:
                 return make_response(jsonify({"message": "user already exists. Please log in to this account on the login page or choose another username"}), 400)       
         else:

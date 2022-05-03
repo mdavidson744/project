@@ -43,7 +43,7 @@ export class LoginComponent {
       this.loginForm.controls[control].touched;
     }
 
-    tokenHeader() {
+    pushedHeader() {
         return {
           headers: new HttpHeaders({
             'Authorization': 'Basic ' + btoa(this.username + ':' + this.password)
@@ -54,8 +54,6 @@ export class LoginComponent {
     onSubmit() {
         this.username = (<HTMLInputElement>document.getElementById("username")).value;
         this.password = (<HTMLInputElement>document.getElementById("password")).value;
-        this.webService.getLogin(this.tokenHeader());
+        this.webService.getLogin(this.pushedHeader());
     }
-
-
 }

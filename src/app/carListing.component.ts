@@ -69,7 +69,6 @@ export class CarListingComponent {
     }
 
     onEditSubmit() {
-        console.log('test')
         this.webService.edCarListing(this.carEditForm.value, this.pushedHeader())
     }
 
@@ -77,21 +76,6 @@ export class CarListingComponent {
         this.showMe=!this.showMe
     }
 
-    // isInvalid(control: any) {
-    //     return this.photoForm.controls[control].invalid &&
-    //         this.photoForm.controls[control].touched
-    // }
-
-    // isUntouched() {
-    //     return this.photoForm.controls.username.pristine  ||
-    //         this.photoForm.controls.comment.pristine;
-    // }
-
-    // isIncomplete() {
-    //     return this.isInvalid('username') ||
-    //         this.isInvalid('comment') ||
-    //         this.isUntouched();
-    // }
 
     id = this.webService.getCarListing(this.route.snapshot.params['id'])
 
@@ -106,13 +90,6 @@ export class CarListingComponent {
     deletePhoto(carListingId: any, photoid: any) {
         this.webService.delPhoto(carListingId, photoid, this.pushedHeader())
     }
-
-    //add photo
-    // 'http://localhost:5000/api/v1.0/carListings/' + this.carListingId + '/photos', postData
-    // onFileSelected(event){
-    //     console.log(event);
-    // }
-
     filesW: File = null;
     //add photo
     onFileSelected(event){

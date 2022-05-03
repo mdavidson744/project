@@ -90,7 +90,10 @@
                     </div>
                     <div class="form-group">
                         <label for="gearbox">Gearbox</label>
-                        <input type="text" id="gearbox" class="form-control" formControlName="gearbox">
+                        <select name="gearbox" id="gearbox" formControlName="gearbox" class="form-select" aria-label="Default select example">
+                            <option value="Manual">Manual</option>
+                            <option value="Automatic">Automatic</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="engineCapacity">Engine Capacity</label>
@@ -98,7 +101,11 @@
                     </div>
                     <div class="form-group">
                         <label for="engineType">Engine Type</label>
-                        <input type="text" id="engineType" name="engineType" class="form-control" formControlName="engineType">
+                        <select name="engineType" id="engineType" formControlName="engineType" class="form-select" aria-label="Default select example">
+                            <option value="Petrol">Petrol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Electric">Electric</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="numberSeats">Number of Seats</label>
@@ -130,33 +137,3 @@
         </div>
     </div>
 </div>
-
-
-<!-- <div class="container">
-    <div class="row">
-        <div class="col-sm-12" *ngFor = "let carListings of car_list | async">
-            <h4>Add a photo</h4> <a (click)="toggleTagP()" class="btn-floating blue pulse">
-                <i class="material-icons">add</i>
-            </a>
-            <form [formGroup]="photoForm" *ngIf="showMeP">
-                    <input type="file" class="file-upload" id="filesW" name="filesW">
-                <button class="btn btn-danger btn-block btn-lg" type="submit" (click)="onPhotoSubmit(carListings._id)" [routerLink] = "['/CarListings']">Upload</button>
-            </form>
-            </div>
-        </div>
-    </div> -->
-
-<!-- <div class="container">
-    <div class="row">
-        <div class="col-sm-12" style="text-align: center;">
-            <form [ formGroup ]="form" (ngSubmit)="submitForm()">
-                <div class="form-group">
-                    <input type="file" (change)="uploadFile($event)">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-danger btn-block btn-lg">Create</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> -->

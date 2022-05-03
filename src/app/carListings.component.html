@@ -108,6 +108,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="make" name="make" class="form-control" formControlName="make">
                             </div>
+                            <span class="error" *ngIf="make.invalid">Make is required & is letters only</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -118,6 +119,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="model" name="model" class="form-control" formControlName="model">
                             </div>
+                            <span class="error" *ngIf="model.invalid">Model is required & is letters only</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -128,6 +130,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="year" name="year" class="form-control" formControlName="year">
                             </div>
+                            <span class="error" *ngIf="year.invalid">Year must be numbers only</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -141,6 +144,7 @@
                                     <option value="Automatic">Automatic</option>
                                 </select>
                             </div>
+                            <span class="error" *ngIf="gearbox.invalid">Gearbox is required. Please select from dropdown.</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -151,6 +155,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="engineCapacity" name="engineCapacity" class="form-control" formControlName="engineCapacity">
                             </div>
+                            <span class="error" *ngIf="engineCapacity.invalid">Engine capacity cc. must be numbers only</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -159,8 +164,13 @@
                                 <label for="engineType">Engine Type</label>
                             </div>
                             <div class="col-sm-9">
-                                <input type="text" id="engineType" name="engineType" class="form-control" formControlName="engineType">
-                            </div> 
+                                <select name="engineType" id="engineType" formControlName="engineType" class="form-select" aria-label="Default select example">
+                                    <option value="Petrol">Petrol</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Electric">Electric</option>
+                                </select>
+                            </div>
+                            <span class="error" *ngIf="engineType.invalid">Engine type is required. Please select from dropdown.</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -171,6 +181,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="numberSeats" name="numberSeats" class="form-control" formControlName="numberSeats">
                             </div>
+                            <span class="error" *ngIf="numberSeats.invalid">No. seats must be numbers only</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -181,6 +192,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="numberDoors" name="numberDoors" class="form-control" formControlName="numberDoors">
                             </div>
+                            <span class="error" *ngIf="numberDoors.invalid">No. doors must be numbers only</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -191,6 +203,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="colour" name="colour" class="form-control" formControlName="colour"> 
                             </div>
+                            <span class="error" *ngIf="colour.invalid">Colour is required and must be letters only.</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -201,6 +214,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="regNumber" name="regNumber" class="form-control" formControlName="regNumber">
                             </div>
+                            <span class="error" *ngIf="regNumber.invalid">Registration number is required</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -209,8 +223,9 @@
                                 <label for="Price">Price £</label>
                             </div>
                             <div class="col-sm-9">
-                                <input type="text" id="Price" name="Price" class="form-control" formControlName="price">
+                                <input type="text" id="price" name="price" class="form-control" formControlName="price">
                             </div>
+                            <span class="error" *ngIf="price.invalid">Price must be numbers only</span>
                         </div>
                     </div>
                     <div class="form-group">
