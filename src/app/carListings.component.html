@@ -3,6 +3,7 @@
  <!-- Compiled and minified CSS -->
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
+
 <!-- SearchForm -->
 <div class="container">
     <div class="row" style="margin-top: 70px;">
@@ -30,17 +31,17 @@
     </div>
 </div> <!-- container -->
   
-<!-- testing new card design -->
+<!-- card -->
 <div class="container">
     <div class="row card-group">
         <div class="col-sm-6 col-md-4 col-lg-3 white" *ngFor = "let carListings of car_list | async | filter: term"> <!-- filter pipe goes here-->
-            <div class="card white" style = "margin: auto; cursor: pointer" [routerLink] = "['/CarListings', carListings._id]">
+            <div class="card white" style = "margin: auto; cursor: pointer; max-height: 500px" [routerLink] = "['/CarListings', carListings._id]">
                     <ng-template *ngIf = "carListings.photos?.length; then showBlock; else notShowBlock"></ng-template>
                     <ng-template #showBlock >
-                        <img src="{{carListings.photos[0].filepath}}">
+                        <img src="{{carListings.photos[0].filepath}}" style="max-height: 170px; width: auto; object-fit: contain;">
                     </ng-template>
                     <ng-template #notShowBlock>
-                        <img src="assets/images/noPictures.jpg" alt="">
+                        <img src="assets/images/noPictures.jpg" alt="no picture on file" style="height: 150px;">
                     </ng-template>
                 <div class="card-content">
                    <div class="card-title">
@@ -108,7 +109,7 @@
                             <div class="col-sm-9">
                                 <input type="text" id="make" name="make" class="form-control" formControlName="make">
                             </div>
-                            <span class="error" *ngIf="make.invalid">Make is required & is letters only</span>
+                            <span class="error" *ngIf="make.invalid">Make is required</span>
                         </div>
                     </div>
                     <div class="form-group">

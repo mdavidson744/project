@@ -77,55 +77,132 @@
                 <form [formGroup]="carEditForm" (ngSubmit)="onEditSubmit()" *ngIf="showMe">
                     <h2>Edit a car</h2>
                     <div class="form-group">
-                        <label for="make">Make</label>
-                        <input type="text" id="make" *ngFor = "let carListings of car_list | async" value=carListings.make name="make" class="form-control" formControlName="make">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="make">Make</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="make" name="make" class="form-control" formControlName="make">
+                            </div>
+                            <span class="error" *ngIf="make.invalid">Make is required & is letters only</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="model">Model</label>
-                        <input type="text" id="model" name="model" class="form-control" formControlName="model">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="model">Model</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="model" name="model" class="form-control" formControlName="model">
+                            </div>
+                            <span class="error" *ngIf="model.invalid">Model is required & is letters only</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="year">Year</label>
-                        <input type="text" id="year" name="year" class="form-control" formControlName="year">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="year">Year</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="year" name="year" class="form-control" formControlName="year">
+                            </div>
+                            <span class="error" *ngIf="year.invalid">Year must be numbers only</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="gearbox">Gearbox</label>
-                        <select name="gearbox" id="gearbox" formControlName="gearbox" class="form-select" aria-label="Default select example">
-                            <option value="Manual">Manual</option>
-                            <option value="Automatic">Automatic</option>
-                        </select>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="gearbox">Gearbox</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select name="gearbox" id="gearbox" formControlName="gearbox" class="form-select" aria-label="Default select example">
+                                    <option value="Manual">Manual</option>
+                                    <option value="Automatic">Automatic</option>
+                                </select>
+                            </div>
+                            <span class="error" *ngIf="gearbox.invalid">Gearbox is required. Please select from dropdown.</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="engineCapacity">Engine Capacity</label>
-                        <input type="text" id="engineCapacity" name="engineCapacity" class="form-control" formControlName="engineCapacity">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="engineCapacity">Engine Capacity</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="engineCapacity" name="engineCapacity" class="form-control" formControlName="engineCapacity">
+                            </div>
+                            <span class="error" *ngIf="engineCapacity.invalid">Engine capacity cc. must be numbers only</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="engineType">Engine Type</label>
-                        <select name="engineType" id="engineType" formControlName="engineType" class="form-select" aria-label="Default select example">
-                            <option value="Petrol">Petrol</option>
-                            <option value="Diesel">Diesel</option>
-                            <option value="Electric">Electric</option>
-                        </select>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="engineType">Engine Type</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <select name="engineType" id="engineType" formControlName="engineType" class="form-select" aria-label="Default select example">
+                                    <option value="Petrol">Petrol</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Electric">Electric</option>
+                                </select>
+                            </div>
+                            <span class="error" *ngIf="engineType.invalid">Engine type is required. Please select from dropdown.</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="numberSeats">Number of Seats</label>
-                        <input type="text" id="numberSeats" name="numberSeats" class="form-control" formControlName="numberSeats">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="numberSeats">Number of Seats</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="numberSeats" name="numberSeats" class="form-control" formControlName="numberSeats">
+                            </div>
+                            <span class="error" *ngIf="numberSeats.invalid">No. seats must be numbers only</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="numberDoors">Number of Doors</label>
-                        <input type="text" id="numberDoors" name="numberDoors" class="form-control" formControlName="numberDoors">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="numberDoors">Number of Doors</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="numberDoors" name="numberDoors" class="form-control" formControlName="numberDoors">
+                            </div>
+                            <span class="error" *ngIf="numberDoors.invalid">No. doors must be numbers only</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="colour">Colour</label>
-                        <input type="text" id="colour" name="colour" class="form-control" formControlName="colour">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="colour">Colour</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="colour" name="colour" class="form-control" formControlName="colour"> 
+                            </div>
+                            <span class="error" *ngIf="colour.invalid">Colour is required and must be letters only.</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="regNumber">Reg Number</label>
-                        <input type="text" id="regNumber" name="regNumber" class="form-control" formControlName="regNumber">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="regNumber">Reg Number</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="regNumber" name="regNumber" class="form-control" formControlName="regNumber">
+                            </div>
+                            <span class="error" *ngIf="regNumber.invalid">Registration number is required</span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="Price">Price £</label>
-                        <input type="text" id="Price" name="Price" class="form-control" formControlName="price">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="Price">Price £</label>
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="text" id="price" name="price" class="form-control" formControlName="price">
+                            </div>
+                            <span class="error" *ngIf="price.invalid">Price must be numbers only</span>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>

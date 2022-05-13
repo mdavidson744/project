@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { WebService } from './web.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder , FormControl, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FilterPipe } from './filter.pipe';
@@ -26,10 +26,13 @@ export class RegisterComponent {
     ngOnInit() {
     
         this.registerForm = this.formBuilder.group({
-           username: '',
-           password: ''
+
+           username: new FormControl('', [Validators.required]),
+           password: new FormControl('', [Validators.required])
         })
     }
+    get username(){return this.registerForm.get('username')}
+    get password(){return this.registerForm.get('password')}
 
     onSubmit() {
         this.webService.postUser(this.registerForm.value);

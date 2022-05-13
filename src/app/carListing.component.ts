@@ -1,7 +1,7 @@
 import { Component, ViewContainerRef, OnInit } from '@angular/core';
 import { WebService } from './web.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { toBase64String } from '@angular/compiler/src/output/source_map';
@@ -50,23 +50,34 @@ export class CarListingComponent {
         this.car_list = this.webService.getCarListing(this.route.snapshot.params['id']);
         this.photos = this.webService.getPhotos(this.route.snapshot.params['id']);
         this.carEditForm = this.formBuilder.group({
-            make: '',
-            model: '',
-            year: '',
-            gearbox: '',
-            engineCapacity: '',
-            engineType: '',
-            numberSeats: '',
-            numberDoors: '',
-            colour: '',
-            description: '',
-            regNumber: '',
-            price: ''
+            make: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+            model: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+            year: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            gearbox: new FormControl('', [Validators.required]),
+            engineCapacity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            engineType: new FormControl('', [Validators.required]),
+            numberSeats: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            numberDoors: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
+            colour: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+            description: '', //optional so no validators.
+            regNumber: new FormControl('', [Validators.required]),
+            price: new FormControl('',[Validators.required, Validators.pattern(/^[0-9]\d*$/)])
         }),
         this.photoForm = this.formBuilder.group({
             filesW: null
         })
     }
+    get make(){return this.carEditForm.get('make')}
+    get model(){return this.carEditForm.get('model')}
+    get year(){return this.carEditForm.get('year')}
+    get gearbox(){return this.carEditForm.get('gearbox')}
+    get engineCapacity(){return this.carEditForm.get('engineCapacity')}
+    get engineType(){return this.carEditForm.get('engineType')}
+    get numberSeats(){return this.carEditForm.get('numberSeats')}
+    get numberDoors(){return this.carEditForm.get('numberDoors')}
+    get colour(){return this.carEditForm.get('colour')}
+    get regNumber(){return this.carEditForm.get('regNumber')}
+    get price(){return this.carEditForm.get('price')}
 
     onEditSubmit() {
         this.webService.edCarListing(this.carEditForm.value, this.pushedHeader())

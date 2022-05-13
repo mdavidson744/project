@@ -72,6 +72,64 @@ def admin_required(func):
         
     return admin_required_wrapper
 
+ 
+@app.route("/api/v1.0/login", methods=["GET"])
+def login():
+    auth = request.authorization
+    if auth:
+        user = users.find_one( { "username": auth.username})
+        if user is not None:
+            session['username'] = auth.username
+            if bcrypt.checkpw( bytes( auth.password, 'UTF-8'), user["password"]):
+                token = jwt.encode( {
+                    'user': auth.username,
+                    'admin': user["admin"],
+                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+                    }, app.config['SECRET_KEY'])
+                return make_response( jsonify({ 'token': token, 'username': session['username']}), 200)
+            else:
+                return make_response( jsonify( {'message': 'Bad password'}), 401)
+        else:
+            return make_response( jsonify({'message': 'Bad username'}), 401)
+    return make_response(jsonify({'message': 'Authentication required'}), 401)
+    
+
+@app.route("/api/v1.0/logout", methods=["GET"])
+@jwt_required
+def logout():
+    token = request.headers['x-access-token']
+    blacklist.insert_one({ "token": token})
+    return make_response(jsonify({'message': 'Logout successful'}), 200)
+
+@app.route("/api/v1.0/users", methods=["POST"])
+def add_user():
+    #check
+    usernameT = None
+    if "username" in request.form and "password" in request.form:
+        if request.form["username"] != "" and request.form["password"] != "" and request.form["username"] != NULL and request.form["password"] != NULL:
+            usernameT = request.form["username"]
+            user = users.find_one( { "username": usernameT})
+            if user is None:
+                password = bytes(request.form["password"], 'utf-8') #needed for 'Unicode objects must be encoded before hashing'
+                new_user = {
+                    "username": request.form["username"],
+                    "password": password,
+                    "admin": False
+                }
+                new_user["password"] = bcrypt.hashpw(new_user["password"], bcrypt.gensalt())
+                new_user_id = users.insert_one(new_user)
+                #response
+                new_user_link = "http://localhost:5000/api/v1.0/users/" + str(new_user_id.inserted_id)
+                return make_response(jsonify({"url": new_user_link, "username": request.form["username"]}), 201) #only for postman testing. get rid of url and replace with 'message': 'user created successfully' when released
+            else:
+                return make_response(jsonify({"message": "user already exists. Please log in to this account on the login page or choose another username"}), 400)       
+        else:
+            return make_response(jsonify({"message": "Cannot have null data or an empty form"}), 400) 
+    
+    else:
+            #catch
+            return make_response(jsonify({"message": 'Wrong form data'}), 400)
+
 @app.route("/")
 def index():
     return make_response(jsonify({'message': 'Hello! This is the index page. If you require the car listings page, please go to /api/v1.0/carListings'}))
@@ -275,63 +333,7 @@ def delete_photo(cid, pid):
             )
         return make_response(jsonify({}), 204)
         
- 
-@app.route("/api/v1.0/login", methods=["GET"])
-def login():
-    auth = request.authorization
-    if auth:
-        user = users.find_one( { "username": auth.username})
-        if user is not None:
-            session['username'] = auth.username
-            if bcrypt.checkpw( bytes( auth.password, 'UTF-8'), user["password"]):
-                token = jwt.encode( {
-                    'user': auth.username,
-                    'admin': user["admin"],
-                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-                    }, app.config['SECRET_KEY'])
-                return make_response( jsonify({ 'token': token, 'username': session['username']}), 200)
-            else:
-                return make_response( jsonify( {'message': 'Bad password'}), 401)
-        else:
-            return make_response( jsonify({'message': 'Bad username'}), 401)
-    return make_response(jsonify({'message': 'Authentication required'}), 401)
-    
 
-@app.route("/api/v1.0/logout", methods=["GET"])
-@jwt_required
-def logout():
-    token = request.headers['x-access-token']
-    blacklist.insert_one({ "token": token})
-    return make_response(jsonify({'message': 'Logout successful'}), 200)
-
-@app.route("/api/v1.0/users", methods=["POST"])
-def add_user():
-    #check
-    usernameT = None
-    if "username" in request.form and "password" in request.form:
-        if request.form["username"] != "" and request.form["password"] != "" and request.form["username"] != NULL and request.form["password"] != NULL:
-            usernameT = request.form["username"]
-            user = users.find_one( { "username": usernameT})
-            if user is None:
-                password = bytes(request.form["password"], 'utf-8') #needed for 'Unicode objects must be encoded before hashing'
-                new_user = {
-                    "username": request.form["username"],
-                    "password": password,
-                    "admin": False
-                }
-                new_user["password"] = bcrypt.hashpw(new_user["password"], bcrypt.gensalt())
-                new_user_id = users.insert_one(new_user)
-                #response
-                new_user_link = "http://localhost:5000/api/v1.0/users/" + str(new_user_id.inserted_id)
-                return make_response(jsonify({"url": new_user_link, "username": request.form["username"]}), 201) #only for postman testing. get rid of url and replace with 'message': 'user created successfully' when released
-            else:
-                return make_response(jsonify({"message": "user already exists. Please log in to this account on the login page or choose another username"}), 400)       
-        else:
-            return make_response(jsonify({"message": "Cannot have null data or an empty form"}), 400) 
-    
-    else:
-            #catch
-            return make_response(jsonify({"message": 'Wrong form data'}), 400)
     
     
 

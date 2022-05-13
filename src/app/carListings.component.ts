@@ -46,7 +46,7 @@ export class CarListingsComponent {
         this.photos = this.webService.getPhotos(this.route.snapshot.params['id']);
         this.carForm = this.formBuilder.group({
             make: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
-            model: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]),
+            model: new FormControl('', [Validators.required]),
             year: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),
             gearbox: new FormControl('', [Validators.required]),
             engineCapacity: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]),

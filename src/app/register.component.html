@@ -19,6 +19,7 @@ Import Google Icon Font
                             </div>
                         </div>
                     </div>
+                    <span class="error" *ngIf="username.invalid">Username is required</span>
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-3">
@@ -29,7 +30,11 @@ Import Google Icon Font
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary" type="submit">Register</button>
+                    <span class="error" *ngIf="password.invalid">Password is required</span>
+                    <div class="">
+                        <button class="btn btn-primary" type="submit">Register</button>
+                    </div>
+                    
                 </form>
                 <div class="row" style="padding-top: 70px;">
                     <h5>Criteria:</h5>
